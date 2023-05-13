@@ -4,7 +4,11 @@ from contact import models
 
 
 def index(request):
-    contacts = models.Contact.objects.all()
+    contacts = models.Contact.objects \
+        .filter(show=True) \
+        .order_by('-id')[:25]
+
+    # print(contacts.query)  # consulta SQL
 
     context = {
         'contacts': contacts
