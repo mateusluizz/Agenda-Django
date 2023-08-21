@@ -1,3 +1,4 @@
+from django.core.paginator import Paginator
 from django.db.models import Q
 from django.http import Http404, HttpRequest
 from django.shortcuts import get_object_or_404, redirect, render
@@ -8,12 +9,16 @@ from contact import models
 def index(request: HttpRequest):
     contacts = models.Contact.objects \
         .filter(show=True) \
-        .order_by('-id')[:50]
+        .order_by('-id')
+
+    paginator = Paginator(contacts, 25)
+    page_nummber = request.GET.get('page')
+    page_obj = paginator.get_page(page_nummber)
 
     # print(contacts.query)  # consulta SQL
 
     context = {
-        'contacts': contacts,
+        'page_obj': page_obj,
         'site_title': 'Contatos -'
     }
 
@@ -41,8 +46,12 @@ def search(request: HttpRequest):
         ) \
         .order_by('-id')
 
+    paginator = Paginator(contacts, 25)
+    page_nummber = request.GET.get('page')
+    page_obj = paginator.get_page(page_nummber)
+
     context = {
-        'contacts': contacts,
+        'page_obj': page_obj,
         'site_title': 'Search -',
         'search_value': search_value,
     }
