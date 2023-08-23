@@ -1,21 +1,33 @@
+from django import forms
 from django.http import HttpRequest
 from django.shortcuts import render
 
 from contact import models
 
 
+class ContactForm(forms.ModelForm):
+    class Meta:
+        model = models.Contact
+        fields = (
+            'first_name', 'last_name', 'phone',
+        )
+
+
 def create(request: HttpRequest):
 
-    search = request.POST
-    if request.method == "POST":
-        print(request.method)
-        print(search.get('first_name'))
-        print(search.get('last_name'))
-        print(search.get('password'))
+    if request.method == 'POST':
+        context = {
+            'form': ContactForm(data=request.POST),
+        }
 
-    print(search)
-
-    context = {}
+        return render(
+            request,
+            'contact/create.html',
+            context,
+        )
+    context = {
+        'form': ContactForm(),
+    }
 
     return render(
         request,

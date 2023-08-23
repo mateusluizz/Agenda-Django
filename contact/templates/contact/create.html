@@ -1,41 +1,24 @@
-{% extends 'global/base.html' %}
-
-{% block content %}
-  <div class="form-wrapper">
-    <h2>Contact</h2>
-    <form 
-      action="/contact/create/"
-      method="POST"
-      enctype="multipart/form-data" 
-    >
-
+{% extends 'global/base.html' %} {% block content %}
+<div class="form-wrapper">
+  <h2>Contact</h2>
+  <form action="/contact/create/" method="POST" enctype="multipart/form-data">
     {% csrf_token %}
 
     <div class="form-content">
+      {% for field in form %}
       <div class="form-group">
-        <label for="id_first_name">Fist Name</label>
-        <input type="text" name="first_name" maxlength="255" id="id_first_name">
-      </div>
-
-      <div class="form-group">
-        <label for="id_last_name">Last Name</label>
-        <input type="text" name="last_name" maxlength="255" id="id_last_name">
-      </div>
-
-      <div class="form-group">
-        <label for="password">Password</label>
-        <input type="password" name="password" maxlength="255" id="password">
-      </div>
-
+        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+          {{ field }}
+        </div>
+      {% endfor %}
+    </div>
 
     <div class="form-content">
       <div class="form-group">
         <button class="btn" type="submit">Send</button>
       </div>
     </div>
-  
-  
-  
   </form>
-  </div>
-{% endblock content %}
+
+  {% endblock content %}
+</div>
