@@ -7,11 +7,42 @@ from contact import models
 
 
 class ContactForm(forms.ModelForm):
+
+    # Recriando o campo
+    first_name = forms.CharField(
+        widget=forms.TextInput(
+            attrs={
+                'class': 'class-a class-b',
+                'placeholder': 'Aqui veio do init',
+            }
+        ),
+        label='Primeiro nome',
+        help_text='Texo de ajuda do usuário'
+    )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # Atualizar um widget já existente
+        # self.fields['first_name'].widget.attrs.update({
+        #     'class': 'class-a class-b',
+        #     'placeholder': 'Aqui veio do init',
+        # })
+
     class Meta:
         model = models.Contact
         fields = (
             'first_name', 'last_name', 'phone',
         )
+        # Criar um novo widget
+        # widgets = {
+        #     'first_name': forms.TextInput(
+        #         attrs={
+        #             'class': 'classe-a classe-b',
+        #             'placeholder': 'escreva aqui'
+        #         }
+        #     )
+        # }
 
     def clean(self) -> Dict[str, Any]:
         cleaned_data = self.cleaned_data
