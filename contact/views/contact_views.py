@@ -3,11 +3,11 @@ from django.db.models import Q
 from django.http import Http404, HttpRequest
 from django.shortcuts import get_object_or_404, redirect, render
 
-from contact import models
+from contact.models import Contact
 
 
 def index(request: HttpRequest):
-    contacts = models.Contact.objects \
+    contacts = Contact.objects \
         .filter(show=True) \
         .order_by('-id')
 
@@ -36,7 +36,7 @@ def search(request: HttpRequest):
     if search_value == '':
         return redirect('contact:index')
 
-    contacts = models.Contact.objects \
+    contacts = Contact.objects \
         .filter(show=True) \
         .filter(
             Q(first_name__icontains=search_value) |
@@ -69,7 +69,7 @@ def contact(request: HttpRequest, contact_id: int):
     #     models.Contact.objects.filter(pk=contact_id)
     # )
     single_contact = get_object_or_404(
-        models.Contact,
+        Contact,
         pk=contact_id,
         show=True
     )
