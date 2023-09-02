@@ -2,7 +2,7 @@ from django.contrib import auth, messages
 from django.contrib.auth.forms import AuthenticationForm
 from django.shortcuts import redirect, render
 
-from contact.forms import RegisterForm
+from contact.forms import RegisterForm, RegisterUpdateForm
 
 
 def register(request):
@@ -25,19 +25,47 @@ def register(request):
     )
 
 
+def user_update(request):
+    form = RegisterUpdateForm(instance=request.user)
+
+    if request.method != 'POST':
+        return render(
+            request,
+            'contact/user_update.html',
+            {
+                'form': form
+            }
+        )
+
+    form = RegisterUpdateForm(data=request.POST, instance=request.user)
+
+    if not form.is_valid():
+        return render(
+            request,
+            'contact/user_update.html',
+            {
+                'form': form
+            }
+        )
+
+    form.save()
+    messages.success(request, 'Usuário Atualizado com sucesso!')
+    return redirect('contact:user_update')
+
+
 def login_view(request):
 
     form = AuthenticationForm(request)
 
     if request.method == 'POST':
-        form = AuthenticationForm(request, request.POST)
+        form = AuthenticationForm(request, data=request.POST)
 
-    if form.is_valid():
-        user = form.get_user()
-        auth.login(request, user)
-        messages.success(request, 'Logado com sucesso!')
-        return redirect('contact:index')
-    messages.error(request, 'Login Inválido!')
+        if form.is_valid():
+            user = form.get_user()
+            auth.login(request, user)
+            messages.success(request, 'Logado com sucesso!')
+            return redirect('contact:index')
+        messages.error(request, 'Login Inválido!')
 
     return render(
         request,
