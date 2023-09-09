@@ -20,7 +20,8 @@ def create(request: HttpRequest) -> HttpResponse:
 
         if form.is_valid():
             # contact = form.save(commit=False) # Editar algo antes de salvar
-            contact = form.save()
+            contact = form.save(commit=False)
+            contact.owner = request.user
             contact.save()
             return redirect('contact:update', contact_id=contact.pk)
 
@@ -45,7 +46,7 @@ def create(request: HttpRequest) -> HttpResponse:
 @login_required(login_url='contact:login')
 def update(request: HttpRequest, contact_id: int) -> HttpResponse:
     contact = get_object_or_404(
-        models.Contact, pk=contact_id, show=True
+        models.Contact, pk=contact_id, show=True, owner=request.user
     )
     form_action = reverse('contact:update', args=(contact_id,))
 
@@ -83,7 +84,7 @@ def update(request: HttpRequest, contact_id: int) -> HttpResponse:
 @login_required(login_url='contact:login')
 def delete(request: HttpRequest, contact_id: int) -> HttpResponse:
     contact = get_object_or_404(
-        models.Contact, pk=contact_id, show=True
+        models.Contact, pk=contact_id, show=True, owner=request.user
     )
 
     confirmation = request.POST.get('confirmation', 'no')
