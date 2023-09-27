@@ -10,8 +10,9 @@ from django.utils import timezone
 # Depois
 # owner (foreign key)
 
-
 class Category(models.Model):
+    # https://docs.djangoproject.com/en/4.2/ref/models/options/
+    # se tiver _('Category') -> É Sobre tradução
     class Meta:
         verbose_name = 'Category'
         verbose_name_plural = 'Categories'
@@ -42,4 +43,4 @@ class Contact(models.Model):
     )
 
     def __str__(self) -> str:
-        return f'{self.first_name}'
+        return f'{self.first_name} {self.last_name}'

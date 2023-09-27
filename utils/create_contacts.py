@@ -7,10 +7,11 @@ from random import choice
 import django
 from django.conf import settings
 
-DJANGO_BASE_DIR = Path(__file__).parent.parent
+DJANGO_BASE_DIR = Path(__file__).resolve().parent.parent
 NUMBER_OF_OBJECTS = 1000
 
 sys.path.append(str(DJANGO_BASE_DIR))
+# sempre configurar se não usar manage.py
 os.environ['DJANGO_SETTINGS_MODULE'] = 'project.settings'
 settings.USE_TZ = False
 
